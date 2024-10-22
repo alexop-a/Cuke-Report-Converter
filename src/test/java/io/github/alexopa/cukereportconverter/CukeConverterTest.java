@@ -27,7 +27,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import io.github.alexopa.cukereportconverter.config.CukeConverterProperties;
-import io.github.alexopa.cukereportconverter.config.CukeConverterPropertyHandler;
 import io.github.alexopa.cukereportconverter.exception.CukeConverterException;
 import io.github.alexopa.cukereportconverter.model.cuke.CukeScenarioResult;
 import io.github.alexopa.cukereportconverter.model.cuke.CukeTestRun;
@@ -46,7 +45,6 @@ public class CukeConverterTest {
 		}
 	}
 	
-	
 	@BeforeEach
 	public void test_setup() {
 		resetPropertiesToDefault();
@@ -54,7 +52,7 @@ public class CukeConverterTest {
 	
 	@Test
 	public void test_convert_to_test_run() {	
-		cukeConverter = new CukeConverter(new CukeConverterPropertyHandler());
+		cukeConverter = new CukeConverter();
 		
 		final ClassLoader classLoader = getClass().getClassLoader();
 		final String resourceName = "reportconvertservice/report_all_pass.json";
@@ -84,7 +82,7 @@ public class CukeConverterTest {
 	
 	@Test
 	public void test_conversion() {
-		cukeConverter = new CukeConverter(new CukeConverterPropertyHandler());
+		cukeConverter = new CukeConverter();
 		
 		final ClassLoader classLoader = getClass().getClassLoader();
 		final String resourceName = "reportconvertservice/report_all_pass.json";
@@ -100,7 +98,7 @@ public class CukeConverterTest {
 	
 	@Test
 	public void test_convert_merge_files_no_common_features() {	
-		cukeConverter = new CukeConverter(new CukeConverterPropertyHandler());
+		cukeConverter = new CukeConverter();
 		
 		final ClassLoader classLoader = getClass().getClassLoader();
 		final String resourceName1 = "reportconvertservice/merge-no-common-feature/report_feature_cart.json";
@@ -127,7 +125,7 @@ public class CukeConverterTest {
 	@Test
 	public void test_convert_common_features_merge() {
 		System.setProperty(CukeConverterProperties.CONVERTER_MERGE_FEATURES.getPropertyName(), "false");
-		cukeConverter = new CukeConverter(new CukeConverterPropertyHandler());
+		cukeConverter = new CukeConverter();
 		
 		final ClassLoader classLoader = getClass().getClassLoader();
 		final String resourceName1 = "reportconvertservice/merge-common-feature/report_feature_product_api.json";
@@ -159,7 +157,7 @@ public class CukeConverterTest {
 	@Test
 	public void test_convert_report_with_wrong_format_fail_on_error_false() {	
 		System.setProperty(CukeConverterProperties.CONVERTER_FAIL_ON_ERROR.getPropertyName(), "false");
-		cukeConverter = new CukeConverter(new CukeConverterPropertyHandler());
+		cukeConverter = new CukeConverter();
 
 		
 		final ClassLoader classLoader = getClass().getClassLoader();
@@ -175,7 +173,7 @@ public class CukeConverterTest {
 	@Test
 	public void test_convert_report_with_wrong_format_fail_on_error_true() {
 		System.setProperty(CukeConverterProperties.CONVERTER_FAIL_ON_ERROR.getPropertyName(), "true");
-		cukeConverter = new CukeConverter(new CukeConverterPropertyHandler());
+		cukeConverter = new CukeConverter();
 
 		final ClassLoader classLoader = getClass().getClassLoader();
 		final String resourceName1 = "reportconvertservice/report_with_wrong_format.json";
@@ -189,7 +187,7 @@ public class CukeConverterTest {
 	@Test
 	public void test_convert_report_with_wrong_feature_element_fail_on_error_false() {	
 		System.setProperty(CukeConverterProperties.CONVERTER_FAIL_ON_ERROR.getPropertyName(), "false");
-		cukeConverter = new CukeConverter(new CukeConverterPropertyHandler());
+		cukeConverter = new CukeConverter();
 
 		
 		final ClassLoader classLoader = getClass().getClassLoader();
@@ -204,7 +202,7 @@ public class CukeConverterTest {
 	@Test
 	public void test_convert_report_with_wrong_feature_element_fail_on_error_true() {	
 		System.setProperty(CukeConverterProperties.CONVERTER_FAIL_ON_ERROR.getPropertyName(), "true");
-		cukeConverter = new CukeConverter(new CukeConverterPropertyHandler());
+		cukeConverter = new CukeConverter();
 
 		
 		final ClassLoader classLoader = getClass().getClassLoader();

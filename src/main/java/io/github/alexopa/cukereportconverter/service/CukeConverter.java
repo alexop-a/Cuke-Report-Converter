@@ -61,7 +61,15 @@ public class CukeConverter {
 	private final CukeConverterPropertyHandler propHandler;
 
 	/**
-	 * Constructor of {@link CukeConverter}
+	 * Creates a new {@link CukeConverter} instance. The default
+	 * {@link CukeConverterPropertyHandler} is initialized and used.
+	 */
+	public CukeConverter() {
+		this(new CukeConverterPropertyHandler());
+	}
+	
+	/**
+	 * Creates a new {@link CukeConverter} instance.
 	 * 
 	 * @param propHandler The {@link CukeConverterPropertyHandler} instance
 	 *                               used to initialize the class
@@ -82,7 +90,8 @@ public class CukeConverter {
 		List<Feature> jsonFeatures = convertCucumberJsonFiles(jsonFiles);
 		CukeTestRun testRun = CukeTestRun.builder().features(convertToCukeFeature(jsonFeatures)).build();
 		testRun.calculateStartTime();
-
+		testRun.calculateEndTime();
+		
 		return testRun;
 	}
 
@@ -125,7 +134,7 @@ public class CukeConverter {
 	 * @return A {@link List} of {@link CukeFeature} objects
 	 */
 	public List<CukeFeature> convertToCukeFeature(List<Feature> jsonFeatures) {
-		log.info("Starting transormation of features. Size: {}", jsonFeatures.size());
+		log.info("Starting transformation of features. Size: {}", jsonFeatures.size());
 
 		List<CukeFeature> features = new ArrayList<>();
 		for (Feature jsonFeature : jsonFeatures) {
@@ -220,8 +229,10 @@ public class CukeConverter {
 				scenario.setAfterStepsDuration(afterSteps.stream().mapToLong(CukeStep::getDuration).sum());
 				isPassed = isPassed && afterSteps.stream().allMatch(s -> CukeStepResult.PASSED.equals(s.getResult()));
 
-				scenario.setTotalDuration(scenario.getBeforeStepsDuration() + scenario.getAfterStepsDuration()
-						+ scenario.getBackgroundStepsDuration() + scenario.getScenarioStepsDuration());
+				long totalDuration = scenario.getBeforeStepsDuration() + scenario.getAfterStepsDuration()
+						+ scenario.getBackgroundStepsDuration() + scenario.getScenarioStepsDuration();
+				scenario.setTotalDuration(totalDuration);
+				scenario.setEndTimestamp(scenario.getStartTimestamp().plusNanos(totalDuration));
 				if (isPassed) {
 					scenario.setResult(CukeScenarioResult.PASSED);
 					feature.increaseNumOfPassedScenarios();

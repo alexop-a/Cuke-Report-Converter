@@ -39,6 +39,7 @@ public class CukeTestRun {
 	@Builder.Default
 	private List<CukeFeature> features = new ArrayList<>();
 	private LocalDateTime startTime;
+	private LocalDateTime endTime;
 
 	/**
 	 * Calculates that startTime of the test-run. As startTime, we consider the
@@ -48,6 +49,17 @@ public class CukeTestRun {
 		if (!Utils.isListNullOrEmpty(features)) {
 			startTime = features.stream().min(Comparator.comparing(CukeFeature::getScenarioMinStartTime)).get()
 					.getScenarioMinStartTime();
+		}
+	}
+
+	/**
+	 * Calculates that endTime of the test-run. As endTime, we consider the
+	 * maximum endTime of all {@link CukeScenario}s in the {@link CukeFeature}s.
+	 */
+	public void calculateEndTime() {
+		if (!Utils.isListNullOrEmpty(features)) {
+			endTime = features.stream().max(Comparator.comparing(CukeFeature::getScenarioMaxEndTime)).get()
+					.getScenarioMaxEndTime();
 		}
 	}
 

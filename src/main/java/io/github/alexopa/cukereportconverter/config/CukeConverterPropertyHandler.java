@@ -42,14 +42,25 @@ public class CukeConverterPropertyHandler {
 	private Properties props = new Properties();
 
 	/**
-	 * The constructor of {@link CukeConverterPropertyHandler}.
+	 * Creates a new {@link CukeConverterPropertyHandler} instance. The default
+	 * properties file is used for initialization.
 	 */
 	public CukeConverterPropertyHandler() {
-		initProperties();
+		initProperties(PROPERTIES_FILE);
 	}
 
-	private void initProperties() {
-		Properties propsFromFile = initPropsFromFile(PROPERTIES_FILE);
+	/**
+	 * Creates a new {@link CukeConverterPropertyHandler} instance.
+	 * 
+	 * @param propsFile A {@link String} with the properties file to be used for
+	 *                  initialization
+	 */
+	public CukeConverterPropertyHandler(String propsFile) {
+		initProperties(propsFile);
+	}
+
+	private void initProperties(String propsFile) {
+		Properties propsFromFile = initPropsFromFile(propsFile);
 		Properties propsFromSystemProperties = initPropsFromSystem();
 
 		props = mergeProperties(propsFromFile, propsFromSystemProperties);
