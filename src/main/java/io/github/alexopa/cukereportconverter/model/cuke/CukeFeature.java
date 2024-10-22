@@ -55,6 +55,8 @@ public class CukeFeature {
 	@Builder.Default
 	private LocalDateTime minScenarioStartTime = null;
 	@Builder.Default
+	private LocalDateTime maxScenarioEndTime = null;
+	@Builder.Default
 	private long totalDuration = 0;
 	private String codeRef;
 
@@ -75,7 +77,23 @@ public class CukeFeature {
 	}
 
 	/**
-	 * Retuns the number of scenarios that belongs to this {@link CukeFeature}
+	 * Calculates and returns the maximum endTime of the {@link CukeScenario}s that
+	 * belong to this {@link CukeFeature}
+	 * 
+	 * @return A {@link LocalDateTime} with the maximum endTime of the
+	 *         {@link CukeScenario}s that belong to this {@link CukeFeature}
+	 */
+	public LocalDateTime getScenarioMaxEndTime() {
+		if (maxScenarioEndTime == null) {
+			maxScenarioEndTime = scenarios.stream().max(Comparator.comparing(CukeScenario::getEndTimestamp)).get()
+					.getEndTimestamp();
+
+		}
+		return maxScenarioEndTime;
+	}
+
+	/**
+	 * Returns the number of scenarios that belongs to this {@link CukeFeature}
 	 * 
 	 * @return An <code>int</code> with the number of scenarios that belongs to this
 	 *         {@link CukeFeature}

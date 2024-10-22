@@ -42,6 +42,7 @@ public class CukeScenario {
 
 	private CukeFeature parent;
 	private LocalDateTime startTimestamp;
+	private LocalDateTime endTimestamp;
 	private String name;
 	private CukeScenarioType type;
 	private String description;
