@@ -91,7 +91,7 @@ public class CukeConverterPropertyHandler {
 		InputStream inStream = null;
 		inStream = classLoader.getResourceAsStream(f);
 		if (inStream == null) {
-			log.warn("{} file is missing.", f);
+			log.debug("{} file is missing.", f);
 			return propsFromFile;
 		}
 
