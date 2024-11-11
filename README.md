@@ -2,6 +2,15 @@
 
 **Cuke-Report-Converter** is a library that parses cucumber json report files and maps the report to java objects. It also provides a conversion method that maps those objects to a new structure ( cuke model ).
 
+### Installation
+Add the following dependency in pom.xml file
+
+	<dependency>
+		<artifactId>cuke-report-converter</artifactId>
+		<groupId>io.github.alexop-a</groupId>
+		<version>1.0.3</version>
+	</dependency>
+
 ### Models
 The library defines two models.
 
