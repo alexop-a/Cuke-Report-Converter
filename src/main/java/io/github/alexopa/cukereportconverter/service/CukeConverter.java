@@ -23,7 +23,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -45,6 +44,7 @@ import io.github.alexopa.cukereportconverter.model.cuke.CukeStepSection;
 import io.github.alexopa.cukereportconverter.model.jsonreport.Element;
 import io.github.alexopa.cukereportconverter.model.jsonreport.Feature;
 import io.github.alexopa.cukereportconverter.model.jsonreport.Step;
+import io.github.alexopa.cukereportconverter.model.jsonreport.Tag;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -120,7 +120,7 @@ public class CukeConverter {
 					log.warn("Failed to process json file: {}. Ignoring error", jsonFile);
 				}
 			}
-			Optional.ofNullable(features).ifPresent(fs -> cucumberJsonFeatures.addAll(fs));
+			Optional.ofNullable(features).ifPresent(cucumberJsonFeatures::addAll);
 		}
 		return cucumberJsonFeatures;
 	}
@@ -162,7 +162,7 @@ public class CukeConverter {
 			if (createNewFeature) {
 				feature = CukeFeature.builder().name(jsonFeature.getName()).description(jsonFeature.getDescription())
 						.scenarios(new ArrayList<>())
-						.tags(jsonFeature.getTags().stream().map(t -> t.getName()).collect(Collectors.toList()))
+						.tags(jsonFeature.getTags().stream().map(Tag::getName).toList())
 						.codeRef(jsonFeature.getUri()).build();
 				features.add(feature);
 			} else {
@@ -170,7 +170,8 @@ public class CukeConverter {
 			}
 
 			List<Element> featureElements = jsonFeature.getElements();
-			for (int i = 0; i < featureElements.size();) {
+			int i = 0;
+			while (i < featureElements.size()) {
 				boolean isBackground = featureElements.get(i).getType().equalsIgnoreCase("background");
 				boolean isPassed = true;
 
@@ -187,7 +188,7 @@ public class CukeConverter {
 				scenario.setName(scenarioElement.getName());
 				scenario.setLine(scenarioElement.getLine());
 
-				scenario.setTags(scenarioElement.getTags().stream().map(t -> t.getName()).collect(Collectors.toList()));
+				scenario.setTags(scenarioElement.getTags().stream().map(Tag::getName).toList());
 				feature.getTotalTags().addAll(scenario.getTags());
 
 				scenario.setType(scenarioElement.getKeyword().equalsIgnoreCase("scenario") ? CukeScenarioType.SCENARIO
@@ -197,7 +198,7 @@ public class CukeConverter {
 				List<CukeStep> beforeSteps = scenarioElement.getBefore().stream()
 						.map(s -> convertStepFunction
 								.apply(new ConvertStepContext(s, CukeStepSection.BEFORE_SCENARIO, scenario)))
-						.collect(Collectors.toList());
+						.toList();
 				scenario.setBeforeSteps(beforeSteps);
 				scenario.setBeforeStepsDuration(beforeSteps.stream().mapToLong(CukeStep::getDuration).sum());
 				isPassed = isPassed && beforeSteps.stream().allMatch(s -> CukeStepResult.PASSED.equals(s.getResult()));
@@ -206,7 +207,7 @@ public class CukeConverter {
 					List<CukeStep> backgroundSteps = backgroundElement.getSteps().stream()
 							.map(s -> convertStepFunction
 									.apply(new ConvertStepContext(s, CukeStepSection.BACKGROUND, scenario)))
-							.collect(Collectors.toList());
+							.toList();
 					scenario.setBackgroundSteps(backgroundSteps);
 					scenario.setBackgroundStepsDuration(backgroundSteps.stream().mapToLong(CukeStep::getDuration).sum());
 					isPassed = isPassed
@@ -215,7 +216,7 @@ public class CukeConverter {
 
 				List<CukeStep> scenarioSteps = scenarioElement.getSteps().stream().map(
 						s -> convertStepFunction.apply(new ConvertStepContext(s, CukeStepSection.SCENARIO, scenario)))
-						.collect(Collectors.toList());
+						.toList();
 				scenario.setScenarioSteps(scenarioSteps);
 				scenario.setScenarioStepsDuration(scenarioSteps.stream().mapToLong(CukeStep::getDuration).sum());
 
@@ -224,7 +225,7 @@ public class CukeConverter {
 				List<CukeStep> afterSteps = scenarioElement.getAfter().stream()
 						.map(s -> convertStepFunction
 								.apply(new ConvertStepContext(s, CukeStepSection.AFTER_SCENARIO, scenario)))
-						.collect(Collectors.toList());
+						.toList();
 				scenario.setAfterSteps(afterSteps);
 				scenario.setAfterStepsDuration(afterSteps.stream().mapToLong(CukeStep::getDuration).sum());
 				isPassed = isPassed && afterSteps.stream().allMatch(s -> CukeStepResult.PASSED.equals(s.getResult()));
@@ -269,14 +270,14 @@ public class CukeConverter {
 		Optional.ofNullable(s.getResult()).ifPresent(r -> step.setErrorMessage(r.getErrorMessage()));
 		Optional.ofNullable(s.getMatch()).ifPresent(m -> step.setMatch(CukeStepMatch.from(m)));
 		if (s.getEmbeddings() != null && !s.getEmbeddings().isEmpty()) {
-			step.setEmbeddings(s.getEmbeddings().stream().map(CukeEmbedding::from).collect(Collectors.toList()));
+			step.setEmbeddings(s.getEmbeddings().stream().map(CukeEmbedding::from).toList());
 		}
 		if (s.getRows() != null && !s.getRows().isEmpty()) {
 			step.setTableData(s.getRows().stream().map(row -> {
 				List<String> r = new ArrayList<>();
 				r.addAll(row.getCells());
 				return r;
-			}).collect(Collectors.toList()));
+			}).toList());
 		}
 		Optional.ofNullable(s.getDocString()).ifPresent(docS -> step.setDocString(docS.getValue()));
 
@@ -284,14 +285,14 @@ public class CukeConverter {
 			List<CukeStep> beforeSteps = s.getBefore().stream()
 					.map(ss -> this.convertStepFunction
 							.apply(new ConvertStepContext(ss, CukeStepSection.BEFORE_STEP, parent)))
-					.collect(Collectors.toList());
+					.toList();
 			step.setBeforeSteps(beforeSteps);
 		}
 		if (s.getAfter() != null) {
 			List<CukeStep> afterSteps = s.getAfter().stream()
 					.map(ss -> this.convertStepFunction
 							.apply(new ConvertStepContext(ss, CukeStepSection.AFTER_STEP, parent)))
-					.collect(Collectors.toList());
+					.toList();
 			step.setAfterSteps(afterSteps);
 		}
 
@@ -303,7 +304,7 @@ public class CukeConverter {
 		
 		if (hasError) {
 			if (propHandler.isFailOnConvertError()) {
-				String msg = String.format("Failed to convert feature. Name is not present");
+				String msg = "Failed to convert feature. Name is not present";
 				log.error("{}", msg);
 				throw new CukeConverterException(msg);
 			} else {

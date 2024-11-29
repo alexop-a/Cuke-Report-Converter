@@ -18,9 +18,12 @@ package io.github.alexopa.cukereportconverter.util;
 
 import java.util.List;
 
+import lombok.experimental.UtilityClass;
+
 /**
  * A utility class
  */
+@UtilityClass
 public class Utils {
 
 	/**

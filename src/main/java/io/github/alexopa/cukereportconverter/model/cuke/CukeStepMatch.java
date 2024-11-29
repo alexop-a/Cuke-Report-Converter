@@ -17,7 +17,6 @@
 package io.github.alexopa.cukereportconverter.model.cuke;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import io.github.alexopa.cukereportconverter.model.jsonreport.StepMatch;
 import io.github.alexopa.cukereportconverter.util.Utils;
@@ -43,8 +42,7 @@ public class CukeStepMatch {
 	public static CukeStepMatch from(StepMatch jsonStepMatch) {
 		CukeStepMatch stepMatch = new CukeStepMatch();
 		if (!Utils.isListNullOrEmpty(jsonStepMatch.getArguments())) {
-			stepMatch.setArguments(
-					jsonStepMatch.getArguments().stream().map(CukeMatchArgument::from).collect(Collectors.toList()));
+			stepMatch.setArguments(jsonStepMatch.getArguments().stream().map(CukeMatchArgument::from).toList());
 		}
 		stepMatch.setLocation(jsonStepMatch.getLocation());
 

@@ -16,9 +16,12 @@
  */
 package io.github.alexopa.cukereportconverter.config;
 
+import lombok.experimental.UtilityClass;
+
 /**
  * Class that defines the default values of the service properties
  */
+@UtilityClass
 public class CukeConverterDefaultValues {
 
 	/**
