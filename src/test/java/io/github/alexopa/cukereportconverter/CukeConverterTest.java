@@ -35,7 +35,7 @@ import io.github.alexopa.cukereportconverter.model.cuke.CukeScenario;
 import io.github.alexopa.cukereportconverter.model.jsonreport.Feature;
 import io.github.alexopa.cukereportconverter.service.CukeConverter;
 
-public class CukeConverterTest {
+class CukeConverterTest {
 
 	private CukeConverter cukeConverter;
 	
@@ -51,7 +51,7 @@ public class CukeConverterTest {
 	}
 	
 	@Test
-	public void test_convert_to_test_run() {	
+	void test_convert_to_test_run() {	
 		cukeConverter = new CukeConverter();
 		
 		final ClassLoader classLoader = getClass().getClassLoader();
@@ -69,19 +69,19 @@ public class CukeConverterTest {
 		CukeFeature userAuthF = features.stream().filter(f -> f.getName().equals("User Authentication")).findFirst().get();
 		assertThat(userAuthF.getScenarios()).hasSize(2);
 		assertThat(userAuthF.getNumOfPassedScenarios()).isEqualTo(2);
-		assertThat(userAuthF.getNumOfFailedScenarios()).isEqualTo(0);
+		assertThat(userAuthF.getNumOfFailedScenarios()).isZero();
 		
 		CukeScenario s = userAuthF.getScenarios().stream().filter(sc -> sc.getName().equals("Successful login")).findFirst().get();
 		assertThat(s.getResult()).isEqualTo(CukeScenarioResult.PASSED);
 		assertThat(s.getBeforeSteps()).hasSize(1);
-		assertThat(s.getBackgroundSteps()).hasSize(0);
+		assertThat(s.getBackgroundSteps()).isEmpty();
 		assertThat(s.getScenarioSteps()).hasSize(4);
 		assertThat(s.getAfterSteps()).hasSize(1);
 		assertThat(s.getTags()).containsExactlyInAnyOrder("@ecommerce-test-suite", "@feature-user-auth", "@tcId-ec0005");
 	}
 	
 	@Test
-	public void test_conversion() {
+	void test_conversion() {
 		cukeConverter = new CukeConverter();
 		
 		final ClassLoader classLoader = getClass().getClassLoader();
@@ -97,7 +97,7 @@ public class CukeConverterTest {
 	}
 	
 	@Test
-	public void test_convert_merge_files_no_common_features() {	
+	void test_convert_merge_files_no_common_features() {	
 		cukeConverter = new CukeConverter();
 		
 		final ClassLoader classLoader = getClass().getClassLoader();
@@ -113,17 +113,17 @@ public class CukeConverterTest {
 
 		CukeFeature cartF = features.stream().filter(f -> f.getName().equals("Adding Items to Cart")).findFirst().get();
 		assertThat(cartF.getScenarios()).hasSize(3);
-		assertThat(cartF.getNumOfPassedScenarios()).isEqualTo(0);
+		assertThat(cartF.getNumOfPassedScenarios()).isZero();
 		assertThat(cartF.getNumOfFailedScenarios()).isEqualTo(3);
 		
 		CukeFeature productF = features.stream().filter(f -> f.getName().equals("Product Search")).findFirst().get();
 		assertThat(productF.getScenarios()).hasSize(2);
 		assertThat(productF.getNumOfPassedScenarios()).isEqualTo(2);
-		assertThat(productF.getNumOfFailedScenarios()).isEqualTo(0);
+		assertThat(productF.getNumOfFailedScenarios()).isZero();
 	}
 	
 	@Test
-	public void test_convert_common_features_merge() {
+	void test_convert_common_features_merge() {
 		System.setProperty(CukeConverterProperties.CONVERTER_MERGE_FEATURES.getPropertyName(), "false");
 		cukeConverter = new CukeConverter();
 		
@@ -143,19 +143,19 @@ public class CukeConverterTest {
 				.findFirst().get();
 		assertThat(productF.getScenarios()).hasSize(1);
 		assertThat(productF.getNumOfPassedScenarios()).isEqualTo(1);
-		assertThat(productF.getNumOfFailedScenarios()).isEqualTo(0);
+		assertThat(productF.getNumOfFailedScenarios()).isZero();
 		
 		productF = features.stream().filter(f -> f.getName().equals("Product Search"))
 				.filter(f -> f.getTags().contains("@ui-test"))
 				.findFirst().get();
 		assertThat(productF.getScenarios()).hasSize(2);
 		assertThat(productF.getNumOfPassedScenarios()).isEqualTo(2);
-		assertThat(productF.getNumOfFailedScenarios()).isEqualTo(0);
+		assertThat(productF.getNumOfFailedScenarios()).isZero();
 		
 	}
 	
 	@Test
-	public void test_convert_report_with_wrong_format_fail_on_error_false() {	
+	void test_convert_report_with_wrong_format_fail_on_error_false() {	
 		System.setProperty(CukeConverterProperties.CONVERTER_FAIL_ON_ERROR.getPropertyName(), "false");
 		cukeConverter = new CukeConverter();
 
@@ -166,12 +166,12 @@ public class CukeConverterTest {
 		
 		CukeTestRun testRun = cukeConverter.convertToTestRun(Arrays.asList(file1));
 		List<CukeFeature> features = testRun.getFeatures();
-		assertThat(features).hasSize(0);
+		assertThat(features).isEmpty();
 
 	}
 
 	@Test
-	public void test_convert_report_with_wrong_format_fail_on_error_true() {
+	void test_convert_report_with_wrong_format_fail_on_error_true() {
 		System.setProperty(CukeConverterProperties.CONVERTER_FAIL_ON_ERROR.getPropertyName(), "true");
 		cukeConverter = new CukeConverter();
 
@@ -185,7 +185,7 @@ public class CukeConverterTest {
 	}
 	
 	@Test
-	public void test_convert_report_with_wrong_feature_element_fail_on_error_false() {	
+	void test_convert_report_with_wrong_feature_element_fail_on_error_false() {	
 		System.setProperty(CukeConverterProperties.CONVERTER_FAIL_ON_ERROR.getPropertyName(), "false");
 		cukeConverter = new CukeConverter();
 
@@ -200,7 +200,7 @@ public class CukeConverterTest {
 	}
 	
 	@Test
-	public void test_convert_report_with_wrong_feature_element_fail_on_error_true() {	
+	void test_convert_report_with_wrong_feature_element_fail_on_error_true() {	
 		System.setProperty(CukeConverterProperties.CONVERTER_FAIL_ON_ERROR.getPropertyName(), "true");
 		cukeConverter = new CukeConverter();
 

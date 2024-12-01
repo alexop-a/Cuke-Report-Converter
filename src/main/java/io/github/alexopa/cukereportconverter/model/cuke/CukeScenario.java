@@ -142,9 +142,9 @@ public class CukeScenario {
 	}
 	
 	private final Consumer<CukeStep> countStepResults = (CukeStep s) -> {
-		CukeStepResult result = s.getResult();
-		int counter = stepResultCounter.getOrDefault(result, 0);
-		stepResultCounter.put(result, counter + 1);
+		CukeStepResult stepResult = s.getResult();
+		int counter = stepResultCounter.getOrDefault(stepResult, 0);
+		stepResultCounter.put(stepResult, counter + 1);
 	};
 	
 }

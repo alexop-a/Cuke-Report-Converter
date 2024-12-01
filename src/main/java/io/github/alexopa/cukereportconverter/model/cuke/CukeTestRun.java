@@ -40,6 +40,7 @@ public class CukeTestRun {
 	private List<CukeFeature> features = new ArrayList<>();
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
+	private String id;
 
 	/**
 	 * Calculates that startTime of the test-run. As startTime, we consider the
