@@ -6,7 +6,7 @@
 	<artifactId>cuke-report-converter</artifactId>
 	<groupId>io.github.alexop-a</groupId>
 	<packaging>jar</packaging>
-	<version>1.0.4-SNAPSHOT</version>
+	<version>1.0.4</version>
 
 	<name>Cuke Report Converter</name>
 	<description>A library that parses cucumber json report files and maps the
