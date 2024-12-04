@@ -8,7 +8,7 @@ Add the following dependency in pom.xml file
 	<dependency>
 		<artifactId>cuke-report-converter</artifactId>
 		<groupId>io.github.alexop-a</groupId>
-		<version>1.0.3</version>
+		<version>1.0.4</version>
 	</dependency>
 
 ### Models
