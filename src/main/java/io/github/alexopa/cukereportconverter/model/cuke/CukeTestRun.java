@@ -38,9 +38,10 @@ public class CukeTestRun {
 
 	@Builder.Default
 	private List<CukeFeature> features = new ArrayList<>();
+	@Builder.Default
+	private CukeMetadata metadata = new CukeMetadata();
 	private LocalDateTime startTime;
 	private LocalDateTime endTime;
-	private String id;
 
 	/**
 	 * Calculates that startTime of the test-run. As startTime, we consider the
